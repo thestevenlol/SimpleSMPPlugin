@@ -1,0 +1,7 @@
+name: SimpleSMP
+version: ${project.version}
+main: me.stevenlol.simplesmp.Main
+api-version: 1.17
+authors: [ stevenlol ]
+description: Made for SimpleSMP
+website: https://discord.gg/kjcNNnGWYr

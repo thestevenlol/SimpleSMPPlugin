@@ -1,0 +1,13 @@
+# util
+sql-debug-on-launch: false
+
+# sql
+database:
+  host: localhost
+  port: 3306
+  database: minecraft
+  username: root
+  password:
+
+# chat specific
+chat-prefix: "&e&oSimpleSMP&7 |&r "
