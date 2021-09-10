@@ -98,8 +98,7 @@ public class ScoreboardMain implements Listener {
         });
 
         /*
-        Score blank1 = objective.getScore(" ");
-        blank1.setScore(13);
+
 
         Economy econ = Main.getEconomy();
         Score balance = objective.getScore(Color.translate("&7Balance:"));

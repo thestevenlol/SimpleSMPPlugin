@@ -39,18 +39,12 @@ public class ChatWorker implements Listener {
                     String date = infos[1];
                     OfflinePlayer muter = Bukkit.getOfflinePlayer(UUID.fromString(muterUUID));
                     int durationRemaining = Integer.parseInt(infos[3]);
-                    Bukkit.getScheduler().runTask(Main.getPlugin(), () -> {
-                        TextComponent message = new TextComponent(Color.translate(Main.getPrefix() + "&cYou are currently muted.&r "));
-                        TextComponent hoverForInfo = new TextComponent(Color.translate("&7[&c&oHover for more information&7]"));
-                        hoverForInfo.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                new ComponentBuilder(Color.translate("&7You were muted by&c " + muter.getName()
-                                        + "\n&7For the reason: &c" + reason +
-                                        "\n&7On the date:&c " + date +
-                                        "\n&7Time remaining:&C " + TimeFormatFromSeconds.time(durationRemaining)))
-                                        .create()));
-
-                        player.spigot().sendMessage(message, hoverForInfo);
-                    });
+                    player.sendMessage(Color.translate("&8&m==========&8[&c&l Muted &8]&8&m==========\n" +
+                            "&c&lReason:&7 " + reason +"\n" +
+                            "&c&lMuted by:&7 " + muter.getName() + "\n" +
+                            "&c&lDate:&7 " + date + "\n" +
+                            "&c&lTime remaining:&7 " + TimeFormatFromSeconds.time(durationRemaining) + "\n" +
+                            "&8&m==========&8[&c&l Muted &8]&8&m=========="));
                 });
                 return;
             }

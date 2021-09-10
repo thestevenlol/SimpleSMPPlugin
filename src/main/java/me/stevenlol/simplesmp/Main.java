@@ -1,6 +1,8 @@
 package me.stevenlol.simplesmp;
 
 import co.aikar.commands.PaperCommandManager;
+import com.griefdefender.api.Core;
+import com.griefdefender.api.GriefDefender;
 import me.stevenlol.simplesmp.chat.ChatWorker;
 import me.stevenlol.simplesmp.commands.ChannelCommand;
 import me.stevenlol.simplesmp.commands.SSMP;
@@ -13,8 +15,11 @@ import me.stevenlol.simplesmp.commands.homes.SetHomeCommand;
 import me.stevenlol.simplesmp.commands.moderation.BanCommand;
 import me.stevenlol.simplesmp.commands.moderation.ClearChatCommand;
 import me.stevenlol.simplesmp.commands.moderation.MuteCommand;
+import me.stevenlol.simplesmp.commands.moderation.NotesCommand;
 import me.stevenlol.simplesmp.commands.utilcommands.ClearInventoryCommand;
+import me.stevenlol.simplesmp.commands.utilcommands.FlyCommand;
 import me.stevenlol.simplesmp.commands.utilcommands.ItemCommand;
+import me.stevenlol.simplesmp.griefdefender.DenyFlyOutsideOfClaim;
 import me.stevenlol.simplesmp.listeners.BanListener;
 import me.stevenlol.simplesmp.listeners.MuteListener;
 import me.stevenlol.simplesmp.listeners.PlayerInfoListener;
@@ -24,8 +29,12 @@ import me.stevenlol.simplesmp.utilities.SQL;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public final class Main extends JavaPlugin {
 
@@ -35,6 +44,7 @@ public final class Main extends JavaPlugin {
     private static Economy econ = null;
     private static String prefix;
     private PaperCommandManager manager;
+
 
     @Override
     public void onEnable() {
@@ -49,6 +59,10 @@ public final class Main extends JavaPlugin {
 
         sql.connect();
 
+        manager.getCommandCompletions().registerAsyncCompletion("OfflinePlayers", c -> {
+            return Arrays.stream(Bukkit.getOfflinePlayers()).map(OfflinePlayer::getName).collect(Collectors.toList());
+        });
+
         registerCommands();
         registerListeners();
 
@@ -61,7 +75,6 @@ public final class Main extends JavaPlugin {
         if (!Bukkit.getOnlinePlayers().isEmpty()) {
             Bukkit.getOnlinePlayers().forEach(ScoreboardMain::updateScoreboard);
         }
-
 
     }
 
@@ -84,6 +97,8 @@ public final class Main extends JavaPlugin {
         manager.registerCommand(new ItemCommand());
         manager.registerCommand(new SetHomeCommand());
         manager.registerCommand(new HomeCommand());
+        manager.registerCommand(new FlyCommand());
+        manager.registerCommand(new NotesCommand());
     }
 
     private void registerListeners() {
@@ -92,6 +107,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MuteListener(), this);
         getServer().getPluginManager().registerEvents(new ChatWorker(), this);
         getServer().getPluginManager().registerEvents(new ScoreboardMain(), this);
+        getServer().getPluginManager().registerEvents(new DenyFlyOutsideOfClaim(), this);
     }
 
     private boolean setupChat() {
@@ -116,7 +132,6 @@ public final class Main extends JavaPlugin {
     public static Main getPlugin() {
         return plugin;
     }
-
     public static Chat getChat() { return chat; }
     public static Economy getEconomy() { return econ; }
     public static SQL getSql() { return sql; }

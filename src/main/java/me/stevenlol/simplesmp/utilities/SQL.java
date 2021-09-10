@@ -58,10 +58,16 @@ public class SQL {
                         "BANKACCOUNT DOUBLE(200,30)," +
                         "BALANCE DOUBLE(200,30))");
 
+                PreparedStatement createNotesTable = connection.prepareStatement("CREATE TABLE IF NOT EXISTS ssmp_player_notes (" +
+                        "UUID VARCHAR(100)," +
+                        "NOTE VARCHAR(255)," +
+                        "ID INT)");
+
                 createPlayerInfoTable.executeUpdate();
                 createPlayerMutesTable.executeUpdate();
                 createPlayerHomesTable.executeUpdate();
                 createBankTable.executeUpdate();
+                createNotesTable.executeUpdate();
 
                 System.out.println("Connected to database successfully.");
             } catch (SQLException e) {

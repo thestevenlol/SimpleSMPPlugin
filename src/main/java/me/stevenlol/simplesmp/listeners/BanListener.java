@@ -3,6 +3,7 @@ package me.stevenlol.simplesmp.listeners;
 import me.stevenlol.simplesmp.events.BanEvent;
 import me.stevenlol.simplesmp.utilities.Color;
 import me.stevenlol.simplesmp.utilities.Messages;
+import me.stevenlol.simplesmp.utilities.SQLUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -24,6 +25,8 @@ public class BanListener implements Listener {
                     .replace("{date}", e.getDate()))
                     .replace("{reason}", reason));
         }
+
+
     }
 
 }

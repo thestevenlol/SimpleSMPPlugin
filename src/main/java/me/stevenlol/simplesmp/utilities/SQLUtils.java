@@ -233,8 +233,9 @@ public class SQLUtils {
 
     public static void getHomeLocation(Player player, String homeName, SQLCallback<Location> callback) {
         Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(), () -> {
-            try (PreparedStatement statement = Main.getSql().getConnection().prepareStatement("SELECT * FROM ssmp_player_homes WHERE NAME = ?")) {
+            try (PreparedStatement statement = Main.getSql().getConnection().prepareStatement("SELECT * FROM ssmp_player_homes WHERE NAME = ? AND UUID = ?")) {
                 statement.setString(1, homeName);
+                statement.setString(2, player.getUniqueId().toString());
                 ResultSet set = statement.executeQuery();
                 if (set.next()) {
                     double X = set.getDouble(2);
@@ -253,6 +254,37 @@ public class SQLUtils {
                 throwables.printStackTrace();
             }
         });
+    }
+
+    public static void getTotalNotes(SQLCallback<Integer> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(), () -> {
+            try (PreparedStatement statement = Main.getSql().getConnection().prepareStatement("SELECT * FROM ssmp_player_notes", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                ResultSet set = statement.executeQuery();
+                int id;
+                if (set.next()) {
+                    set.last();
+                    id = set.getRow();
+                } else {
+                    id = 0;
+                }
+                callback.onQueryDone(id);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+    }
+
+    public static void setNote(OfflinePlayer player, String note) {
+        getTotalNotes(id -> Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(), () -> {
+            try (PreparedStatement statement = Main.getSql().getConnection().prepareStatement("INSERT INTO ssmp_player_notes (UUID,NOTE,ID) VALUES (?,?,?)")) {
+                statement.setString(1, player.getUniqueId().toString());
+                statement.setString(2, note);
+                statement.setInt(3, id);
+                statement.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }));
     }
 
 }

@@ -2,6 +2,7 @@ package me.stevenlol.simplesmp.commands.moderation;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import me.stevenlol.simplesmp.Main;
 import me.stevenlol.simplesmp.events.BanEvent;
@@ -14,6 +15,7 @@ public class BanCommand extends BaseCommand {
 
     @CommandAlias("ban")
     @CommandPermission("ssmp.ban")
+    @CommandCompletion("@OfflinePlayers @nothing")
     public void ban(Player player, String[] args) {
         // ban player reason
 
@@ -36,8 +38,6 @@ public class BanCommand extends BaseCommand {
                     player.sendMessage(Color.translate(Main.getPrefix() + "&cThat player has never played on the server before!"));
                     return;
                 }
-
-                // todo actually ban the cunt
 
                 Main.getPlugin().getServer().getPluginManager().callEvent(new BanEvent(reason, target, player));
         }
